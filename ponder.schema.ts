@@ -11,6 +11,7 @@ export const listing = onchainTable("listing", (t) => ({
   isActive: t.boolean().notNull(),
   totalSales: t.bigint().notNull(),
   createdAt: t.bigint().notNull(),
+  lastUpdatedAt: t.bigint().notNull(),
   preferredToken: t.hex().notNull(),
   preferredChain: t.bigint().notNull(),
 }));
@@ -29,6 +30,7 @@ export const userProfile = onchainTable("user_profile", (t) => ({
   totalPurchases: t.bigint().notNull(),
   isTrusted: t.boolean().notNull(),
   lastActivityAt: t.bigint().notNull(),
+  slashCount: t.bigint().notNull(),
 }));
 
 export const escrow = onchainTable("escrow", (t) => ({
@@ -41,7 +43,8 @@ export const escrow = onchainTable("escrow", (t) => ({
   isDisputed: t.boolean().notNull(),
   createdAt: t.bigint().notNull(),
   completedAt: t.bigint(),
-  resolution: t.text(),
+  listingId: t.bigint().notNull(),
+  buyerFid: t.bigint().notNull(),
 }));
 
 export const escrowRelations = relations(escrow, ({ one }) => ({
@@ -52,6 +55,10 @@ export const escrowRelations = relations(escrow, ({ one }) => ({
   seller: one(userProfile, {
     fields: [escrow.seller],
     references: [userProfile.id],
+  }),
+  listing: one(listing, {
+    fields: [escrow.listingId],
+    references: [listing.id],
   }),
 }));
 

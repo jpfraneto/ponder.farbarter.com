@@ -11,7 +11,16 @@ import {
 } from "ponder:schema";
 import { eq, desc, and, gt, lt, sql } from "ponder";
 
-// Constants
+// Constants from smart contract
+const REPUTATION_THRESHOLD = 100;
+const DISPUTE_TIMELOCK = 7 * 24 * 60 * 60; // 7 days in seconds
+const MAX_BLOCK_PURCHASES = 5;
+const MAX_PRICE = BigInt("100000000000000000"); // 0.1 ETH
+const MIN_PRICE = BigInt("100000000000000"); // 0.0001 ETH
+const PROTOCOL_FEE_BPS = 250; // 2.5%
+const SLASH_THRESHOLD = 3;
+
+// API Constants
 const DEFAULT_PAGE_SIZE = 20;
 const MAX_PAGE_SIZE = 100;
 
@@ -162,6 +171,15 @@ ponder.get("/stats", async (c) => {
       totalEscrows: Number(escrowCount[0]?.count),
       totalUsers: Number(userCount[0]?.count),
       activeListings: Number(activeListings[0]?.count),
+      constants: {
+        reputationThreshold: REPUTATION_THRESHOLD,
+        disputeTimelock: DISPUTE_TIMELOCK,
+        maxBlockPurchases: MAX_BLOCK_PURCHASES,
+        maxPrice: MAX_PRICE.toString(),
+        minPrice: MIN_PRICE.toString(),
+        protocolFeeBps: PROTOCOL_FEE_BPS,
+        slashThreshold: SLASH_THRESHOLD,
+      },
     })
   );
 });

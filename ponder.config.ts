@@ -5,17 +5,17 @@ import { FarbarterAbi } from "./abis/FarbarterAbi";
 
 export default createConfig({
   networks: {
-    degen: {
-      chainId: 666666666,
-      transport: http(process.env.PONDER_RPC_URL_666666666),
+    base: {
+      chainId: 8453,
+      transport: http(process.env.PONDER_RPC_URL_8453),
     },
   },
   contracts: {
     Farbarter: {
       abi: FarbarterAbi,
-      address: "0x8D59e8Ef33FB819979Ad09Fb444A26792970fb6f",
-      network: "degen",
-      startBlock: 25172790,
+      address: "0xbAeCa7e569eFea6e020014EAb898373407bBe826",
+      network: "base",
+      startBlock: 24865771,
     },
   },
 });

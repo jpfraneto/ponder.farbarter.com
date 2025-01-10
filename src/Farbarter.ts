@@ -28,6 +28,7 @@ ponder.on("Farbarter:ListingCreated", async ({ event, context }) => {
     isActive: true,
     totalSales: 0n,
     createdAt: BigInt(event.block.timestamp),
+    lastUpdatedAt: BigInt(event.block.timestamp),
     preferredToken,
     preferredChain,
   });
@@ -47,6 +48,7 @@ ponder.on("Farbarter:ListingPurchased", async ({ event, context }) => {
   await db.update(listing, { id: listingId }).set({
     remainingSupply: listingData.remainingSupply - quantity,
     totalSales: listingData.totalSales + quantity,
+    lastUpdatedAt: BigInt(event.block.timestamp),
   });
 
   // Create escrow record
@@ -61,6 +63,8 @@ ponder.on("Farbarter:ListingPurchased", async ({ event, context }) => {
     isDisputed: false,
     createdAt: BigInt(event.block.timestamp),
     completedAt: null,
+    listingId,
+    buyerFid: 0n, // Default to 0 since we can't get this from event
   });
 });
 
@@ -97,7 +101,6 @@ ponder.on("Farbarter:DisputeResolved", async ({ event, context }) => {
 
   await db.update(escrow, { id: escrowId }).set({
     completedAt: BigInt(event.block.timestamp),
-    resolution,
   });
 });
 
@@ -114,6 +117,7 @@ ponder.on("Farbarter:ReputationUpdated", async ({ event, context }) => {
       totalPurchases: 0n,
       lastActivityAt: BigInt(event.block.timestamp),
       isTrusted: newReputation >= 100n,
+      slashCount: 0n,
     })
     .onConflictDoUpdate(() => ({
       reputation: newReputation,
