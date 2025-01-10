@@ -18,4 +18,8 @@ export default createConfig({
       startBlock: 24865771,
     },
   },
+  database: {
+    kind: "postgres",
+    connectionString: process.env.DATABASE_URL,
+  },
 });
